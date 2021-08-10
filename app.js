@@ -1,14 +1,12 @@
 /* eslint-disable no-console */
 const express = require('express');
 const mongoose = require('mongoose');
-// const bodyParser = require('body-parser');
 
-// Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
 
 const app = express();
-app.use(express.json()); // для собирания JSON-формата
-app.use(express.urlencoded({ extended: true })); // для приёма веб-страниц внутри POST-запроса
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
@@ -18,7 +16,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 app.use((req, res, next) => {
   req.user = {
-    _id: '6111aa46015cfe0e9c90db5d', // вставьте сюда _id созданного в предыдущем пункте пользователя
+    _id: '6112042df6dabc3b300e36d3',
   };
 
   next();
@@ -28,6 +26,5 @@ app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
 app.listen(PORT, () => {
-  // Если всё работает, консоль покажет, какой порт приложение слушает
   console.log(`App listening on port ${PORT}`);
 });
