@@ -2,11 +2,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
-const { login, createUser } = require('./controllers/users');
+const cookieParser = require('cookie-parser');
 
 const { PORT = 3000 } = process.env;
-
 const app = express();
+
+const { login, createUser } = require('./controllers/users');
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -17,14 +19,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 app.use(helmet());
-
-app.use((req, res, next) => {
-  req.user = {
-    _id: '6112042df6dabc3b300e36d3',
-  };
-
-  next();
-});
+app.use(cookieParser());
 
 app.post('/signin', login);
 app.post('/signup', createUser);
