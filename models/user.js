@@ -17,18 +17,29 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
+    required: true,
+    validate: {
+      validator(v) {
+        // eslint-disable-next-line no-useless-escape
+        return /((http|https):\/\/)(www\.)?([A-Za-z0-9-._~:\/?#[\]@!$&'()*+,;=])*/.test(v);
+      },
+    },
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
   },
   email: {
     type: String,
     unique: true,
     required: true,
-    validate: validator.isEmail,
+    // Требуется по ТЗ, но в данный момент валидация email происходит через joi celebrate
+    validate: {
+      validator(v) {
+        return validator.isEmail(v);
+      },
+    },
   },
   password: {
     type: String,
     required: true,
-    minlength: 8,
     select: false,
   },
 }, {

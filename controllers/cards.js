@@ -4,6 +4,9 @@ const ForbiddenError = require('../errors/forbidden-err');
 const BadRequestError = require('../errors/bad-request-err');
 const NotFoundError = require('../errors/not-found-err');
 
+// Закомментил некоторые участки кода,
+// так как теперь за отлов ошибок в этих местах отвечает joi celebrate
+
 module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send(cards))
@@ -16,7 +19,7 @@ module.exports.createCard = (req, res, next) => {
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.send(card))
     .catch(() => {
-      throw new BadRequestError('Переданы некорректные данные при создании пользователя');
+      throw new BadRequestError('Переданы некорректные данные при создании карточки');
     })
     .catch(next);
 };
@@ -37,9 +40,10 @@ module.exports.deleteCard = (req, res, next) => {
     .catch((err) => {
       if (err.message === 'NotFound') {
         throw new NotFoundError('Карточка с указанным ID не найдена');
-      } else if (err.name === 'CastError') {
-        throw new BadRequestError('Переданы некорректные данные при удалении');
       }
+      // else if (err.name === 'CastError') {
+      //   throw new BadRequestError('Переданы некорректные данные при удалении');
+      // }
       return next(err);
     })
     .catch(next);
@@ -59,7 +63,7 @@ module.exports.likeCard = (req, res, next) => {
       if (err.message === 'NotFound') {
         throw new NotFoundError('Карточка с указанным ID не найдена');
       }
-      throw new BadRequestError('Переданы некорректные данные для постановки лайка');
+      // throw new BadRequestError('Переданы некорректные данные для постановки лайка');
     })
     .catch(next);
 };
@@ -78,7 +82,7 @@ module.exports.unlikeCard = (req, res, next) => {
       if (err.message === 'NotFound') {
         throw new NotFoundError('Карточка с указанным ID не найдена');
       }
-      throw new BadRequestError('Переданы некорректные данные для снятия лайка');
+      // throw new BadRequestError('Переданы некорректные данные для снятия лайка');
     })
     .catch(next);
 };
