@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -11,6 +12,7 @@ const cardSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator(v) {
+        validator.isURL(v, { require_protocol: true });
         // eslint-disable-next-line no-useless-escape
         return /((http|https):\/\/)(www\.)?([A-Za-z0-9-._~:\/?#[\]@!$&'()*+,;=])*/.test(v);
       },
