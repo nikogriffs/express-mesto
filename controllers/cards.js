@@ -29,7 +29,7 @@ module.exports.deleteCard = (req, res, next) => {
     .orFail(new Error('NotFound'))
     .then((card) => {
       if (JSON.stringify(req.user._id) === JSON.stringify(card.owner)) {
-        Card.findOneAndRemove(req.params.cardId)
+        Card.findByIdAndDelete(req.params.cardId)
           .then((result) => {
             res.send(result);
           });
