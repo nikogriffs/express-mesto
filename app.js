@@ -8,6 +8,7 @@ const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
 const NotFoundError = require('./errors/not-found-err');
 const BadRequestError = require('./errors/bad-request-err');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -23,6 +24,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 app.use(helmet());
 app.use(cookieParser());
+
+app.use(requestLogger);
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -43,6 +46,8 @@ app.post('/signup', celebrate({
 
 app.use('/users', auth, require('./routes/users'));
 app.use('/cards', auth, require('./routes/cards'));
+
+app.use(errorLogger);
 
 app.use('*', () => {
   throw new NotFoundError('Запрашиваемый ресурс не найден');
